@@ -1,0 +1,173 @@
+{
+    "info": {
+        "_postman_id": "573efd2a-a04c-4442-9a41-dd68d194a5fb",
+        "name": "Laravel API Starter Kit",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "description": ""
+    },
+    "item": [
+        {
+            "name": "http://127.0.0.1:8000/api/v1/products",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/products",
+                    "path": [
+                        "api",
+                        "v1",
+                        "products"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "127",
+                        "0",
+                        "0",
+                        "1"
+                    ],
+                    "port": "8000"
+                },
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"name\": \"Laravel Starter Kit Pro\",\n  \"description\": \"Boilerplate REST API modern siap pakai\",\n  \"price\": 490000,\n  \"stock\": 25\n}"
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "6|IVVjUdhxGt9lZWnBjzOYlrgodHzzNfz9Z3sbk2Uc2f1a1e7d",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "http://127.0.0.1:8000/api/v1/products",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/products",
+                    "path": [
+                        "api",
+                        "v1",
+                        "products"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "127",
+                        "0",
+                        "0",
+                        "1"
+                    ],
+                    "port": "8000"
+                },
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "6|IVVjUdhxGt9lZWnBjzOYlrgodHzzNfz9Z3sbk2Uc2f1a1e7d",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "http://127.0.0.1:8000/api/v1/login",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/login",
+                    "path": [
+                        "api",
+                        "v1",
+                        "login"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "127",
+                        "0",
+                        "0",
+                        "1"
+                    ],
+                    "port": "8000"
+                },
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"email\": \"rizkya@example.com\",\n  \"password\": \"password123\"\n}"
+                }
+            }
+        },
+        {
+            "name": "http://127.0.0.1:8000/api/v1/register",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/register",
+                    "path": [
+                        "api",
+                        "v1",
+                        "register"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "127",
+                        "0",
+                        "0",
+                        "1"
+                    ],
+                    "port": "8000"
+                },
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"name\": \"Rizkya Nasti\",\n  \"email\": \"rizkya.baru@example.com\",\n  \"password\": \"password123\"\n}"
+                }
+            }
+        }
+    ]
+}

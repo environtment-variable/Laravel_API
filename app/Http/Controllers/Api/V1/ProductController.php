@@ -3,55 +3,66 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\Product\StoreProductRequest;
+use App\Http\Requests\Api\V1\Product\UpdateProductRequest;
+use App\Http\Resources\V1\ProductResource;
 use App\Models\Product;
 use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
     use ApiResponse;
 
-    public function index(): JsonResponse
+    public function index()
     {
-        return $this->successResponse(Product::all(), 'Products retrieved successfully.');
+        // Menggunakan pagination agar performa tetap optimal untuk skala besar
+        $products = Product::latest()->paginate(10);
+
+        return $this->successResponse(
+            ProductResource::collection($products),
+            'Products retrieved successfully.'
+        );
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreProductRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-            'stock' => 'required|integer',
-        ]);
+        // Validasi otomatis ditangani oleh StoreProductRequest
+        $product = Product::create($request->validated());
 
-        $product = Product::create($validated);
-        return $this->successResponse($product, 'Product created successfully.', Response::HTTP_CREATED);
+        return $this->successResponse(
+            new ProductResource($product),
+            'Product created successfully.',
+            Response::HTTP_CREATED
+        );
     }
 
-    public function show(Product $product): JsonResponse
+    public function show(Product $product)
     {
-        return $this->successResponse($product, 'Product details retrieved successfully.');
+        return $this->successResponse(
+            new ProductResource($product),
+            'Product details retrieved successfully.'
+        );
     }
 
-    public function update(Request $request, Product $product): JsonResponse
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        $validated = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'description' => 'sometimes|string',
-            'price' => 'sometimes|numeric',
-            'stock' => 'sometimes|integer',
-        ]);
+        // Validasi otomatis ditangani oleh UpdateProductRequest
+        $product->update($request->validated());
 
-        $product->update($validated);
-        return $this->successResponse($product, 'Product updated successfully.');
+        return $this->successResponse(
+            new ProductResource($product),
+            'Product updated successfully.'
+        );
     }
 
-    public function destroy(Product $product): JsonResponse
+    public function destroy(Product $product)
     {
         $product->delete();
-        return $this->successResponse(null, 'Product deleted successfully.');
+
+        return $this->successResponse(
+            null,
+            'Product deleted successfully.'
+        );
     }
 }

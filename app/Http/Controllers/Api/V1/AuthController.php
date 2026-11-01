@@ -3,48 +3,55 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\Auth\LoginRequest;
+use App\Http\Requests\Api\V1\Auth\RegisterRequest;
+use App\Http\Resources\V1\UserResource;
 use App\Models\User;
 use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
     use ApiResponse;
-    public function register(Request $request)
+
+    public function register(RegisterRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|min:8',
-        ]);
+        // Parameter input otomatis tervalidasi via RegisterRequest
+        $validated = $request->validated();
 
         $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
+            'name'     => $validated['name'],
+            'email'    => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer'], 201);
+        // Membungkus model User dengan UserResource dan dikirim via successResponse
+        return $this->successResponse([
+            'user'         => new UserResource($user),
+            'access_token' => $token,
+            'token_type'   => 'Bearer',
+        ], 'Registrasi berhasil', Response::HTTP_CREATED);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        $validated = $request->validated();
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $validated['email'])->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Kredensial salah'], 401);
+        if (! $user || ! Hash::check($validated['password'], $user->password)) {
+            return $this->errorResponse('Kredensial yang diberikan salah', Response::HTTP_UNAUTHORIZED);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json(['message' => 'Login sukses', 'access_token' => $token, 'token_type' => 'Bearer']);
+        return $this->successResponse([
+            'user'         => new UserResource($user),
+            'access_token' => $token,
+            'token_type'   => 'Bearer',
+        ], 'Login berhasil');
     }
 }
